@@ -1,0 +1,144 @@
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css"
+        rel="stylesheet" type="text/css">
+        <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css"
+        rel="stylesheet" type="text/css">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		
+		<script>
+			var username = window.localStorage.getItem("username");
+			if(username != ''){
+				window.location.href = "home.html";
+			}
+		</script>
+    </head>
+    
+    <body>
+        <div class="container"></div>
+        <div class="section">
+            <div class="container"></div>
+        </div>
+        <div class="section">
+            <div class="container"></div>
+        </div>
+        <div class="section">
+            <div class="container"></div>
+        </div>
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4 col-md-offset-4">
+                        <div class="account-wall">
+                            <div id="my-tab-content" class="tab-content">
+                                <div class="tab-pane active" id="login">
+                                    <img class="img-thumbnail profile-img" src="http://localhost/sistemaIntegrado/www/ibar_logo.png"
+                                    alt="">
+                                    <br><br>
+                                    <div class="alert alert-danger" id="mensagemLogin" style="display: none">
+                                        Email ou Senha estão errados.
+                                    </div>
+                                    <form class="form-signin" id="formLogin" action="#" method="post">
+                                        <input type="email" class="form-control" id="login" name="login" placeholder="Email" required="" autofocus="">
+                                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required="">
+                                        <input type="submit" class="btn btn-lg btn-default btn-block" value="Entrar">
+                                    </form>
+                                    <div id="tabs" data-tabs="tabs">
+                                        <p class="text-center">
+                                            <a href="#register" data-toggle="tab">Criar uma conta!</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="register">
+                                    <form class="form-signin" id="formCadastro" action="#" method="">
+                                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome ..." required=""
+                                        autofocus="">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Emaill ..."
+                                        required="">
+                                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha ..."
+                                        required="">
+                                        <input type="submit" class="btn btn-lg btn-default btn-block" value="Ok">
+                                    </form>
+                                    <div id="tabs" data-tabs="tabs">
+                                        <p class="text-center">
+                                            <a href="#login" data-toggle="tab">Já tem um conta?</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+		<script type="text/javascript">
+            $('#formLogin').submit(function(e) {
+                e.preventDefault();
+            
+                var vDados = $('#formLogin').serialize();
+
+                var login = $('#login').val();
+
+                $.ajax({
+                    type: "POST",
+                    //url: "http://eforms.esy.es/phonegap/login.php",
+                    url: "http://localhost/sistemaIntegrado/www/php/login.php",
+                    data: vDados,
+                    success: function (result) {
+                        if(result == '1'){
+                            window.localStorage.setItem("username", login);                            
+                            window.location.href =  "http://localhost/sistemaIntegrado/www/home.html";
+                            //document.getElementById("msg_error").style.display = "none";
+                        }else{                            
+                            document.getElementById("mensagemLogin").style.display = "block";
+                        }
+                    },
+                    error: function () {
+                        alert("Erro de conexao");
+                    }
+                })
+            });
+        </script>
+		
+		<script type="text/javascript">
+			 $('#formCadastro').submit(function(e) {
+                e.preventDefault();
+                
+				var formulario = $('#formCadastro').serialize();
+				
+				$.ajax({
+					type: "POST",
+					//url: "http://eforms.esy.es/phonegap/login.php",
+					url:"http://localhost/sistemaIntegrado/www/php/cadastroUsers.php",
+					data: formulario,
+					success: function (result){
+                       if(result == 1){
+                            alert('Registro salvo com sucesso');
+                            window.location = "http://localhost/sistemaIntegrado/www/index.html";
+                       }else{
+                            alert('Ocorreu um erro no banco de dados');
+                       }
+					},
+                    error: function () {
+                        alert("Erro de conexao");
+                    }
+				
+				})
+				
+			});
+		</script>
+		
+		
+    </body>
+
+</html>

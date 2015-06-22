@@ -1,0 +1,111 @@
+<html>
+
+	<head>
+	<meta charset="utf-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+
+<body > 
+
+<div data-role="page" style="top: 0px" data-url="/sistemaIntegrado/www/about.html" tabindex="0" class="ui-page ui-page-theme-a ui-page-active" style=""> 
+
+<div class="jqm-demos ui-responsive-panel">
+    <div class="ui-panel-wrappers">
+        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">
+            <h1 class="ui-title" role="heading" aria-level="1">Cardapio</h1>
+        </div><!-- /header -->
+    </div><!-- /header -->
+	<center>
+	<div class="container">
+    <div class="row col-md-6 col-md-offset-2 custyle">
+    <table class="table table-striped custab">
+    <div class="article">
+                
+                <input type="hidden" id="codigoEstabelecimento">
+
+            
+    <thead>
+        <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+            <tr>
+                <td>News</td>
+                <td>News Cate</td>
+                <td class="text-center"><a id="" class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> +</a> 
+            </tr>
+            <tr>
+                <td>Products</td>
+                <td>Main Products</td>
+                <td class="text-center"><a id="" class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> +</a>
+            </tr>
+            <tr>
+                <td>Blogs</td>
+                <td>Parent Blogs</td>
+                <td class="text-center"><a id="" class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> +</a>
+            </tr>
+    </table>
+    </div>
+</div></center>
+
+	 <center> 
+         <table data-role="tables"  data-mode="columntoggles" class="ui-responsive table-strokess">
+                     <thead>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td><button id="btnParcial" >Parcial</button></td>
+                       </tr> 
+                     </tbody>
+                </table>
+            </center>
+	       </div><!-- /content -->
+        </div>        
+    </div><!-- /content -->
+       
+    </div><!-- /panel -->
+</div>
+
+
+
+<script type="text/javascript">
+
+$('#btnParcial').click(function(e){
+    var codigoEstabelecimento = $('#codigoEstabelecimento').val();
+    window.location.href = "parcial.html?codigo="+codigoEstabelecimento;
+});
+
+$(function() {
+/* VALIDA E CARREGA PAGINA*/
+var id = window.location.href.split("codigo=")[1];
+if($.isNumeric(id)){
+    buscarValoresCardapio(id);
+}else{
+    window.document.href = "home.html";
+}
+
+});
+
+
+function buscarValoresCardapio(estabelecimento_id) {    
+    //$.get('http://eforms.esy.es/phonegap/getPosto.php', {posto_id:posto_id}, function html(json) {
+    $.get('http://localhost/sistemaIntegrado/www/php/getCardapio.php', {estabelecimento_id:estabelecimento_id}, function html(json) {        
+        var dados = jQuery.parseJSON(json);
+        
+        $('#codigoEstabelecimento').val(dados.codigo_id);
+        $('#nome').html(dados.nome);
+        $('#imgEstabelecimento').attr('src','img/'+dados.imagem);
+ });  
+}
+
+
+</script>
+
+
+
+</body>
+</html>

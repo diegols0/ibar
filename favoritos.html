@@ -1,0 +1,114 @@
+<html>
+
+	<head>
+	<meta charset="utf-8">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+	
+	<body>
+
+<head>
+	<meta charset="utf-8">
+	<title>iBar</title>
+	<link rel="shortcut icon" href="../favicon.ico">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script>
+		$( document ).on( "pagecreate", function() {
+			$( "body > [data-role='panel']" ).panel();
+			$( "body > [data-role='panel'] [data-role='listview']" ).listview();
+		});
+		$( document ).one( "pageshow", function() {
+			$( "body > [data-role='header']" ).toolbar();
+			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+		});
+	</script>
+</head>
+<body>
+
+	<div data-role="header" data-position="fixed" data-theme="a">
+
+		<h1 align="left">iBar</h1>
+		<a href="#nav-panel" data-icon="bars" data-iconpos="notext" data-position="right">Menu</a>
+		<div data-role="navbar">
+			<ul>
+				<li><a class="ui-btn-active" id="btnBars" href="#one" data-theme="a" data-ajax="false">Bar's</a></li>
+				<li><a href="#two" data-theme="a" data-ajax="false">Favoritos</a></li>
+				<li><a href="page-c.html">Hot</a></li>
+			</ul>
+		</div>
+
+			<div id="one" class="ui-content">
+              	<ul data-role="listview" data-inset="false" id='listaDeBars'></ul>    
+            </div>
+            <div id="two" class="ui-content">
+                <ul data-role="listview" id="listaDeFavoritos"></ul>
+            </div>
+
+	</div><!-- /header -->
+
+	<div data-role="page" id="a">
+
+		<div role="main" class="ui-content">
+
+		<div class="col-md-3 col-sm-4 col-xs-6">
+			<img class="img-responsive" src="http://localhost/sistemaIntegrado/www/img/maikai.png" align="center" style="width:130; height:85px"; alt="Maikai" />Maikai</div> 
+
+        
+
+		<a href="#inside-a" class="ui-btn ui-shadow ui-corner-all ui-btn-inline"></a>
+
+		</div><!-- /content -->
+	
+
+	</div><!-- /page -->
+
+	<div data-role="panel" data-display="push" data-theme="b" id="nav-panel">
+		<ul data-role="listview">
+			<li data-icon="back"><a href="#" data-rel="close">Fechar</a></li>
+			<li>Início</li>
+			<li data-icon="info"><a id = "idSobre" href="about.html" data-ajax="false">Sobre</li>
+			<li data-icon="delete"><a href="#" id="logout" data-ajax="false">Sair</a></li>
+		</ul>
+	</div>
+
+
+<script type="text/javascript">
+
+
+$('#logout').on('click', function(e){
+    e.preventDefault();
+    window.localStorage.removeItem("username");
+    window.localStorage.removeItem("codigo");
+    window.location.href = "index.html";
+});
+
+
+$(function(){
+getBars();
+});
+
+
+function getFavoritos() { 
+
+    $.get('http://localhost/sistemaIntegrado/www/php/getBars.php', function html(json) {
+    //$.get('http://eforms.esy.es/phonegap/getPostos.php', function html(json) {
+        var dados = jQuery.parseJSON(json);
+        var html = '';
+        $.each(dados.bares, function(chave,bar) {
+            
+            html    +=      '<div class="col-md-3 col-sm-4 col-xs-6"><a data-ajax="false" href="checkin.html?codigo='+bar.codigo+'">';
+			html    +=      '<img class="img-responsive" src="http://ibar.esy.es/imagens/'+bar.imagem+'" align="left" style="width:130; height:85px";/></a></div> ';            
+        });
+        $('#lista').append(html);
+    });  
+
+}
+
+
+</script>
+
+</body>
+</html>

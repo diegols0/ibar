@@ -1,0 +1,159 @@
+<html> 
+<head> 
+	<title>Page Title</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta charset="UTF-8">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head> 
+<body > 
+
+<div data-role="page" style="top: 0px" data-url="#" tabindex="0" class="ui-page ui-page-theme-a ui-page-active" style=""> 
+
+<div class="jqm-demos ui-responsive-panel">
+    <div class="ui-panel-wrappers">
+        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">
+            <h1 class="ui-title" role="heading" aria-level="1">Check-in Bar's</h1>
+            <a href="home.html" data-ajax="false" data-position="right" data-icon="back" class="ui-link ui-btn-left ui-btn ui-icon-back ui-btn-icon-left ui-shadow ui-corner-all" data-role="button" role="button"><br></a>
+        </div><!-- /header -->
+    </div><!-- /header -->
+
+    <div role="main" class="ui-content">
+
+        <div class="article">
+            <center><p><img id="imgEstabelecimento" width="300px" heigh="50px" src="http://demos.jquerymobile.com/1.4.5/_assets/img/bike.jpg"></p></center>
+                
+                <input type="hidden" id="codigoEstabelecimento">
+                
+                <center ><h3><strong id="nome"></h3></strong></center>
+				
+				
+		  <center> 
+                <table data-role="tables"  data-mode="columntoggles" class="ui-responsive table-strokess">
+                     <thead>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td><button id="btnCheckin" >Check-in</button></td>
+                         <td><button id="btnFavoritar" >Add Favoritos</button></td>
+                       </tr> 
+                     </tbody>
+                </table>
+            </center>
+
+			</div><!-- /content -->
+		</div
+    </div><!-- /panel -->
+</div>
+
+
+<script type="text/javascript">
+
+$(function() {
+/* VALIDA E CARREGA PAGINA*/
+var id = window.location.href.split("codigo=")[1];
+
+if($.isNumeric(id)){
+    buscarValoresEstabelecimento(id);
+}else{
+    window.document.href = "home.html";
+}
+});
+
+
+$('#btnFavoritar').click(function(e){
+e.preventDefault();
+    if($(this).html() == "Add Favorito"){
+        gravaFavorito();
+    }else{
+        deletaFavorito();
+    }
+});
+
+function gravaFavorito(){
+    var id_usuario = window.localStorage.getItem("codigo");
+    var id_estabelecimento  = $('#codigoEstabelecimento').val();
+    $.ajax({
+        type: "POST",
+        url: "http://eforms.esy.es/phonegap/cadastraFavorito.php",
+        //url: "http://localhost/sistemaIntegrado/www/php/cadastraFavorito.php",
+        data: {codigoUsuario: id_usuario, codigoEstabelecimento: id_estabelecimento},
+        success: function (result) {
+            if(result == '1'){
+                exibeMensagem('Mensagem','','Favoritos adicionado!','Ok');
+                $('#btnFavoritar').html('Deletar Favorito');
+            }else{          
+                exibeMensagem('Erro','','Não foi possivel favoritar.','Entendi');
+            }
+        },
+        error: function () {
+            alert('error conexao');
+        }
+    })
+}
+
+function verificaFavorito(){
+    $("#cancelarLoader").click();
+    var id_usuario = window.localStorage.getItem("codigo");
+    var id_estabelecimento   = $('#codigoEstabelecimento').val();
+    $.ajax({
+        type: "GET",
+        url: "http://eforms.esy.es/phonegap/verificaFavorito.php",
+        //url: "http://localhost/sistemaIntegrado/www/php/verificaFavorito.php",
+        data: {codigoUsuario: id_usuario, codigoEstabelecimento: id_posto},
+        success: function (result) {
+            if(result == '1'){
+                $('#btnFavoritar').html('Deletar Favorito');
+            }
+        },
+        error: function () {
+            alert('error conexao');
+        }
+    })
+}
+function deletaFavorito(){
+    var id_usuario = window.localStorage.getItem("codigo");
+    var id_estabelecimento   = $('#codigoEstabelecimento').val();
+    $.ajax({
+        type: "POST",
+        url: "http://eforms.esy.es/phonegap/deletaFavorito.php",
+        //url: "http://localhost/sistemaIntegrado/www/php/deletaFavorito.php",
+        data: {codigoUsuario: id_usuario, codigoEstabelecimento: id_estabelecimento},
+        success: function (result) {
+            if(result == '1'){
+                $('#btnFavoritar').html('Add Favorito');
+                exibeMensagem('Mensagem','','Posto deletado dos Favoritos','Ok');
+            }else{          
+                exibeMensagem('Erro','','Não foi possível deletar favorito','Entendi');
+            }
+        },
+        error: function () {
+            alert('error conexao');
+        }
+    })
+}
+
+
+$('#btnCheckin').click(function(e){
+    var codigoEstabelecimento = $('#codigoEstabelecimento').val();
+    window.location.href = "cardapio.html?codigo="+codigoEstabelecimento;
+});
+
+
+function buscarValoresEstabelecimento(estabelecimento_id) {    
+    //$.get('http://http://ibar.esy.es/app/getBar.php', {estabelecimento_id:estabelecimento_id}, function html(json) {
+    $.get('http://localhost/sistemaIntegrado/www/php/getBar.php', {estabelecimento_id:estabelecimento_id}, function html(json) {        
+        var dados = jQuery.parseJSON(json);
+        
+        $('#codigoEstabelecimento').val(dados.codigo_id);
+        $('#nome').html(dados.nome);
+        $('#imgEstabelecimento').attr('src','img/'+dados.imagem);
+ });  
+}
+
+</script>
+	
+	</body>
+</html>
